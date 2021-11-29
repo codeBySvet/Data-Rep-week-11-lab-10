@@ -4,15 +4,20 @@ const port = 4000   //Designate which port for the server to listen on
 const cors = require('cors');   //Needed for cors functionality below
 const bodyParser = require('body-parser');//bodyparser will go parse through HTTP messages 
 
-//This is to handle cors error
-app.use(cors());
-app.use(function(req, res, next) {
-res.header("Access-Control-Allow-Origin", "*");
-res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-res.header("Access-Control-Allow-Headers",
-"Origin, X-Requested-With, Content-Type, Accept");
-next();
-});
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../build')));
+app.use('/static', express.static(path.join(__dirname, 'build//static')));
+
+
+// //This is to handle cors error
+// app.use(cors());
+// app.use(function(req, res, next) {
+// res.header("Access-Control-Allow-Origin", "*");
+// res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+// res.header("Access-Control-Allow-Headers",
+// "Origin, X-Requested-With, Content-Type, Accept");
+// next();
+// });
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -24,7 +29,6 @@ app.use(bodyParser.json())
 const mongoose = require('mongoose');
 
 //  Connecting to MongoDB database
-//const strConnection = 'mongodb+srv://admin:admin@cluster0.8taek.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' 
 const strConnection = "mongodb+srv://anshlom4321:anshlom4321@cluster0.mfk7y.mongodb.net/movies?retryWrites=true&w=majority";
 
 
@@ -104,7 +108,9 @@ app.delete('/api/movies/:id', (req,res)=>{
     })
 })
 
-
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/../build/index.html'));
+    });
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
